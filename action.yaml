@@ -1,0 +1,13 @@
+name: "contributors"
+description: "GitHub Action for generating a list of contibutors of a repository to be used in markdown."
+author: "Levi van Noort"
+
+branding:
+  icon: 'users'
+  color: 'green'
+
+runs:
+  using: "docker"
+  image: "Dockerfile"
+
+inputs: {}
