@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
 	"os"
@@ -55,7 +56,10 @@ func main() {
 		logger.Error("error reading file", slog.Any("error", err))
 	}
 
-	updatedContent := updateContributors(cfg, contributors, string(file))
+	updatedContent, err := updateContributors(cfg, contributors, string(file))
+	if err != nil {
+		logger.Error("updating contributors failed", slog.Any("error", err))
+	}
 
 	err = os.WriteFile(cfg.File, []byte(updatedContent), 0644)
 	if err != nil {
@@ -95,7 +99,7 @@ func fetchContributors(cfg Configuration, ctx context.Context, client *github.Cl
 	return contributors, nil
 }
 
-func updateContributors(cfg Configuration, contributors []Contributor, content string) string {
+func updateContributors(cfg Configuration, contributors []Contributor, content string) (string, error) {
 
 	r := regexp.MustCompile(fmt.Sprintf(`(?s)%s\n*.*?\n*%s`, regexp.QuoteMeta(guard), regexp.QuoteMeta(guard)))
 
@@ -104,10 +108,12 @@ func updateContributors(cfg Configuration, contributors []Contributor, content s
 	if r.MatchString(content) {
 		content = r.ReplaceAllString(content, fmt.Sprintf("%s\n%s\n%s", guard, contributorsHTML, guard))
 	} else {
-		content += fmt.Sprintf("\n\n%s\n%s\n%s", guard, contributorsHTML, guard)
+		// todo: possible option to add it to the content regardless of guards
+		// content += fmt.Sprintf("\n\n%s\n%s\n%s", guard, contributorsHTML, guard)
+		return "", errors.New("no guards found used for protecting the markdown file")
 	}
 
-	return content
+	return content, nil
 }
 
 func generateContributors(cfg Configuration, contributors []Contributor) string {
