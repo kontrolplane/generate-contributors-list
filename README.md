@@ -4,6 +4,42 @@ The `contributors` GitHub Action helps ensuring that contributors get the recogn
 
 ## Example usage
 
+`github-action`
+
+```yaml
+name: update-contributors
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 0'
+
+jobs:
+  update-contributors:
+    name: validate-pull-request-title
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: checkout@v4
+
+      - name: update-contributors
+        uses: kontrolplane/contributors@latest
+
+      - name: open-pull-request
+        uses: 
+```
+
+`README.md`
+
+```markdown
+...
+
+## contributors
+
+[//]: kontrolplane/contributors
+
+[//]: kontrolplane/contributors
+```
 
 
 ## Example output
