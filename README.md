@@ -42,7 +42,19 @@ jobs:
 ```
 
 
-## Example output
+## Example output [code]
+
+`README.md`
+
+```markdown
+[//]: kontrolplane/contributors
+
+<a href="https://github.com/levivannoort"><img src="https://avatars.githubusercontent.com/u/73097785?v=4" title="levivannoort" width="50" height="50"></a>
+
+[//]: kontrolplane/contributors
+```
+
+## Example output [overview]
 
 [//]: kontrolplane/contributors
 
