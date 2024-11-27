@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: checkout@v4
+        uses: actions/checkout@v4
 
       - name: update-contributors
         uses: kontrolplane/contributors@latest
@@ -40,7 +40,6 @@ jobs:
 
 [//]: kontrolplane/contributors
 ```
-
 
 ## Example output [code]
 

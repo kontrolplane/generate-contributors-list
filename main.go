@@ -1,5 +1,127 @@
 package main
 
-func main() {
+import (
+	"context"
+	"fmt"
+	"io/ioutil"
+	"log/slog"
+	"os"
+	"regexp"
+	"strings"
 
+	"github.com/caarlos0/env/v11"
+	"github.com/google/go-github/v67/github"
+)
+
+type Configuration struct {
+	Owner      string `env:"INPUT_OWNER"`
+	Repository string `env:"INPUT_REPOSITORY"`
+	Size       int    `env:"INPUT_SIZE" envDefault:"50"`
+	File       string `env:"INPUT_REPOSITORY" envDefault:"README.md"`
+	Limit      int    `env:"INPUT_SIZE" envDefault:"70"`
+}
+
+type Contributor struct {
+	Username string
+	Avatar   string
+	Profile  string
+}
+
+const guard string = "[//]: kontrolplane/contributors"
+
+func main() {
+	cfg := Configuration{}
+	ctx := context.Background()
+
+	logHandler := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+		AddSource: false,
+		Level:     slog.LevelInfo,
+	})
+	logger := slog.New(logHandler)
+
+	err := env.Parse(&cfg)
+	if err != nil {
+		logger.Error("unable to parse the environment variables", slog.Any("error", err))
+	}
+
+	client := github.NewClient(nil)
+
+	contributors, err := fetchContributors(cfg, ctx, client)
+	if err != nil {
+		logger.Error("error fetching contributors", slog.Any("error", err))
+	}
+
+	file, err := ioutil.ReadFile(cfg.File)
+	if err != nil {
+		logger.Error("error reading file", slog.Any("error", err))
+	}
+
+	updatedContent := updateContributors(cfg, contributors, string(file))
+
+	err = ioutil.WriteFile("README.md", []byte(updatedContent), 0644)
+	if err != nil {
+		logger.Error("error writing file", slog.Any("error", err))
+	}
+
+	logger.Info("contributors section updated successfully")
+}
+
+func fetchContributors(cfg Configuration, ctx context.Context, client *github.Client) ([]Contributor, error) {
+
+	clientOptions := &github.ListContributorsOptions{
+		ListOptions: github.ListOptions{PerPage: cfg.Limit},
+	}
+
+	var contributors []Contributor
+	for {
+		contributorList, resp, err := client.Repositories.ListContributors(ctx, cfg.Owner, cfg.Repository, clientOptions)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, contributor := range contributorList {
+			contributors = append(contributors, Contributor{
+				Username: contributor.GetLogin(),
+				Avatar:   contributor.GetAvatarURL(),
+				Profile:  fmt.Sprintf("https://github.com/%s", contributor.GetLogin()),
+			})
+		}
+
+		if resp.NextPage == 0 {
+			break
+		}
+		clientOptions.Page = resp.NextPage
+	}
+
+	return contributors, nil
+}
+
+func updateContributors(cfg Configuration, contributors []Contributor, content string) string {
+
+	r := regexp.MustCompile(fmt.Sprintf(`(?s)%s\n*.*?\n*%s`, regexp.QuoteMeta(guard), regexp.QuoteMeta(guard)))
+
+	contributorsHTML := generateContributors(cfg, contributors)
+
+	if r.MatchString(content) {
+		content = r.ReplaceAllString(content, fmt.Sprintf("%s\n%s\n%s", guard, contributorsHTML, guard))
+	} else {
+		content += fmt.Sprintf("\n\n%s\n%s\n%s", guard, contributorsHTML, guard)
+	}
+
+	return content
+}
+
+func generateContributors(cfg Configuration, contributors []Contributor) string {
+	var htmlBuilder strings.Builder
+	for _, contributor := range contributors {
+		htmlBuilder.WriteString(fmt.Sprintf(
+			`<a href="%s"><img src="%s" title="%s" width="%d" height="%d"></a> `,
+			contributor.Profile,
+			contributor.Avatar,
+			contributor.Username,
+			cfg.Size,
+			cfg.Size,
+		))
+	}
+	return htmlBuilder.String()
 }
