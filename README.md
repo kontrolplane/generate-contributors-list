@@ -9,5 +9,7 @@ The `contributors` GitHub Action helps ensuring that contributors get the recogn
 ## Example output
 
 [//]: kontrolplane/contributors
+
 <a href="https://github.com/levivannoort"><img src="https://avatars.githubusercontent.com/u/73097785?v=4" title="levivannoort" width="50" height="50"></a>
+
 [//]: kontrolplane/contributors
