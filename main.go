@@ -42,6 +42,7 @@ func main() {
 	err := env.Parse(&cfg)
 	if err != nil {
 		logger.Error("unable to parse the environment variables", slog.Any("error", err))
+		os.Exit(1)
 	}
 
 	client := github.NewClient(nil)
@@ -49,21 +50,25 @@ func main() {
 	contributors, err := fetchContributors(cfg, ctx, client)
 	if err != nil {
 		logger.Error("error fetching contributors", slog.Any("error", err))
+		os.Exit(1)
 	}
 
 	file, err := os.ReadFile(cfg.File)
 	if err != nil {
 		logger.Error("error reading file", slog.Any("error", err))
+		os.Exit(1)
 	}
 
 	updatedContent, err := updateContributors(cfg, contributors, string(file))
 	if err != nil {
 		logger.Error("updating contributors failed", slog.Any("error", err))
+		os.Exit(1)
 	}
 
 	err = os.WriteFile(cfg.File, []byte(updatedContent), 0644)
 	if err != nil {
 		logger.Error("error writing file", slog.Any("error", err))
+		os.Exit(1)
 	}
 
 	logger.Info("contributors section updated successfully")
