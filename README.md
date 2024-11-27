@@ -2,7 +2,15 @@
 
 The `contributors` GitHub Action helps ensuring that contributors get the recognition that they deserve. It will generate code that can be used within markdown files, e.g., `README.md` to show profile picture of people that contributed to a repository and the link to their profiles.
 
-## Example usage
+## Example output [overview]
+
+[//]: kontrolplane/contributors
+
+<a href="https://github.com/levivannoort"><img src="https://avatars.githubusercontent.com/u/73097785?v=4" title="levivannoort" width="50" height="50"></a>
+
+[//]: kontrolplane/contributors
+
+## Example usage [basic - public repository]
 
 `github-action`
 
@@ -24,9 +32,24 @@ jobs:
 
       - name: update-contributors
         uses: kontrolplane/contributors@latest
+        with:
+          owner: kontrolplane
+          repository: pull-request-title-validator
 
       - name: open-pull-request
-        uses: 
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add README.md
+          git commit -m "chore: update contributors section"
+          git push -u origin update-contributors
+          gh pr create \
+            --title "chore: update Contributors" \
+            --body "Automatically update contributors section." \
+            --base main \
+            --head update-contributors
 ```
 
 `README.md`
@@ -52,11 +75,3 @@ jobs:
 
 [//]: kontrolplane/contributors
 ```
-
-## Example output [overview]
-
-[//]: kontrolplane/contributors
-
-<a href="https://github.com/levivannoort"><img src="https://avatars.githubusercontent.com/u/73097785?v=4" title="levivannoort" width="50" height="50"></a>
-
-[//]: kontrolplane/contributors
