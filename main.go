@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	"log/slog"
 	"os"
 	"regexp"
@@ -51,14 +50,14 @@ func main() {
 		logger.Error("error fetching contributors", slog.Any("error", err))
 	}
 
-	file, err := ioutil.ReadFile(cfg.File)
+	file, err := os.ReadFile(cfg.File)
 	if err != nil {
 		logger.Error("error reading file", slog.Any("error", err))
 	}
 
 	updatedContent := updateContributors(cfg, contributors, string(file))
 
-	err = ioutil.WriteFile(cfg.File, []byte(updatedContent), 0644)
+	err = os.WriteFile(cfg.File, []byte(updatedContent), 0644)
 	if err != nil {
 		logger.Error("error writing file", slog.Any("error", err))
 	}
