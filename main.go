@@ -123,14 +123,21 @@ func updateContributors(cfg Configuration, contributors []Contributor, content s
 
 func generateContributors(cfg Configuration, contributors []Contributor) string {
 	var htmlBuilder strings.Builder
-	for _, contributor := range contributors {
+	for i, contributor := range contributors {
 		htmlBuilder.WriteString(fmt.Sprintf(
-			`<a href="%s"><img src="%s" title="%s" width="%d" height="%d"></a> `,
+			`<a href="%s"><img src="%s" title="%s" width="%d" height="%d"></a>%s`,
 			contributor.Profile,
 			contributor.Avatar,
 			contributor.Username,
 			cfg.Size,
 			cfg.Size,
+
+			func() string {
+				if i < len(contributors)-1 {
+					return "\n"
+				}
+				return ""
+			}(),
 		))
 	}
 	return htmlBuilder.String()
