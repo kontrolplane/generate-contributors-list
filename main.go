@@ -17,8 +17,8 @@ type Configuration struct {
 	Owner      string `env:"INPUT_OWNER"`
 	Repository string `env:"INPUT_REPOSITORY"`
 	Size       int    `env:"INPUT_SIZE" envDefault:"50"`
-	File       string `env:"INPUT_REPOSITORY" envDefault:"README.md"`
-	Limit      int    `env:"INPUT_SIZE" envDefault:"70"`
+	File       string `env:"INPUT_FILE" envDefault:"README.md"`
+	Limit      int    `env:"INPUT_LIMIT" envDefault:"70"`
 }
 
 type Contributor struct {
