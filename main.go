@@ -58,7 +58,7 @@ func main() {
 
 	updatedContent := updateContributors(cfg, contributors, string(file))
 
-	err = ioutil.WriteFile("README.md", []byte(updatedContent), 0644)
+	err = ioutil.WriteFile(cfg.File, []byte(updatedContent), 0644)
 	if err != nil {
 		logger.Error("error writing file", slog.Any("error", err))
 	}
