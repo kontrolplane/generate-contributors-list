@@ -45,7 +45,7 @@ jobs:
           git commit -m "chore: update contributors section"
           git push -u origin update-contributors
           gh pr create \
-            --title "chore: update Contributors" \
+            --title "chore: update contributors" \
             --body "Automatically update contributors section." \
             --base main \
             --head update-contributors
@@ -87,6 +87,7 @@ jobs:
           token: ${secrets.GITHUB_TOKEN}
           owner: kontrolplane
           repository: private-repository
+
 ...
 ```
 
