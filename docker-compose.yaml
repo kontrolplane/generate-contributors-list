@@ -10,6 +10,7 @@ services:
       - INPUT_FILE=/README.md
       - INPUT_SIZE=50
       - INPUT_LIMIT=70
+      - INPUT_LOG_LEVEL=debug
     volumes:
       - ./assets/tests/README.md:/README.md
     command: sh -c "./contributors && cat README.md"

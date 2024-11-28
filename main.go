@@ -21,6 +21,7 @@ type Configuration struct {
 	Size       int    `env:"INPUT_SIZE" envDefault:"50"`
 	File       string `env:"INPUT_FILE" envDefault:"README.md"`
 	Limit      int    `env:"INPUT_LIMIT" envDefault:"70"`
+	LogLevel   string `env:"INPUT_LOG_LEVEL" envDefault:"info"`
 }
 
 type Contributor struct {
@@ -35,17 +36,25 @@ func main() {
 	cfg := Configuration{}
 	ctx := context.Background()
 
-	logHandler := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-		AddSource: false,
-		Level:     slog.LevelInfo,
-	})
-	logger := slog.New(logHandler)
-
 	err := env.Parse(&cfg)
 	if err != nil {
-		logger.Error("unable to parse the environment variables", slog.Any("error", err))
+		fmt.Println("unable to parse the environment variables", err)
 		os.Exit(1)
 	}
+
+	var ll slog.Level
+
+	if cfg.LogLevel == "debug" {
+		ll = slog.LevelDebug
+	} else {
+		ll = slog.LevelInfo
+	}
+
+	logHandler := slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+		AddSource: false,
+		Level:     ll,
+	})
+	logger := slog.New(logHandler)
 
 	var client *github.Client
 
@@ -81,6 +90,7 @@ func main() {
 		os.Exit(1)
 	}
 
+	logger.Debug(updatedContent)
 	logger.Info("contributors section updated successfully")
 }
 
