@@ -13,7 +13,6 @@ The `contributors` GitHub Action helps ensuring that contributors get the recogn
 ## Example usage [basic - public repository]
 
 `github-action`
-
 ```yaml
 name: update-contributors
 
@@ -53,7 +52,45 @@ jobs:
 ```
 
 `README.md`
+```markdown
+...
 
+## contributors
+
+[//]: kontrolplane/contributors
+
+[//]: kontrolplane/contributors
+```
+
+## Example usage [basic - private repository]
+
+`github-action`
+```yaml
+name: update-contributors
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 0'
+
+jobs:
+  update-contributors:
+    name: validate-pull-request-title
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: update-contributors
+        uses: kontrolplane/contributors@latest
+        with:
+          token: ${secrets.GITHUB_TOKEN}
+          owner: kontrolplane
+          repository: private-repository
+...
+```
+
+`README.md`
 ```markdown
 ...
 
