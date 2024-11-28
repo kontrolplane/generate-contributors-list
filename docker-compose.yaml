@@ -1,0 +1,15 @@
+services:
+  contributors:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - INPUT_OWNER=kontrolplane
+      - INPUT_REPOSITORY=pull-request-title-validator
+      - GITHUB_TOKEN=""
+      - INPUT_FILE=/README.md
+      - INPUT_SIZE=50
+      - INPUT_LIMIT=70
+    volumes:
+      - ./assets/tests/README.md:/README.md
+    command: sh -c "./contributors && cat README.md"

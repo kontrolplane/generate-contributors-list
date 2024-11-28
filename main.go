@@ -11,9 +11,11 @@ import (
 
 	"github.com/caarlos0/env/v11"
 	"github.com/google/go-github/v67/github"
+	"golang.org/x/oauth2"
 )
 
 type Configuration struct {
+	Token      string `env:"INPUT_TOKEN"`
 	Owner      string `env:"INPUT_OWNER"`
 	Repository string `env:"INPUT_REPOSITORY"`
 	Size       int    `env:"INPUT_SIZE" envDefault:"50"`
@@ -45,7 +47,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	client := github.NewClient(nil)
+	var client *github.Client
+
+	if cfg.Token != "" {
+		ts := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: cfg.Token})
+		tc := oauth2.NewClient(ctx, ts)
+		client = github.NewClient(tc)
+	} else {
+		client = github.NewClient(nil)
+	}
 
 	contributors, err := fetchContributors(cfg, ctx, client)
 	if err != nil {
