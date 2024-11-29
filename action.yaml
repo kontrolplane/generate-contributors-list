@@ -1,4 +1,4 @@
-name: "contributors"
+name: "generate-contributors-list"
 description: "GitHub Action for generating a list of contibutors of a repository to be used in markdown."
 author: "Levi van Noort"
 
@@ -10,4 +10,36 @@ runs:
   using: "docker"
   image: "Dockerfile"
 
-inputs: {}
+inputs:
+  token:
+    description: "GitHub Token to authenticate API requests."
+    required: false
+    type: string
+  owner:
+    description: "The owner of the GitHub repository."
+    required: true
+    type: string
+  repository:
+    description: "The name of the GitHub repository."
+    required: true
+    type: string
+  size:
+    description: "Size (in pixels) for the contributor avatars."
+    required: false
+    default: 50
+    type: number
+  file:
+    description: "The markdown file where the contributors list will be added."
+    required: false
+    default: "README.md"
+    type: string
+  limit:
+    description: "The maximum number of contributors to fetch from the repository."
+    required: false
+    default: 70
+    type: number
+  log_level:
+    description: "Log level for the GitHub Action (info or debug)."
+    required: false
+    default: "info"
+    type: string

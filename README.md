@@ -4,11 +4,11 @@ The `contributors` GitHub Action helps ensuring that contributors get the recogn
 
 ## Example output [overview]
 
-[//]: kontrolplane/contributors
+[//]: kontrolplane/generate-contributors-list
 
 <a href="https://github.com/levivannoort"><img src="https://avatars.githubusercontent.com/u/73097785?v=4" title="levivannoort" width="50" height="50"></a>
 
-[//]: kontrolplane/contributors
+[//]: kontrolplane/generate-contributors-list
 
 ## Example usage [basic - public repository]
 
@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: update-contributors
-        uses: kontrolplane/contributors@latest
+        uses: kontrolplane/generate-contributors-list@latest
         with:
           owner: kontrolplane
           repository: pull-request-title-validator
@@ -57,9 +57,9 @@ jobs:
 
 ## contributors
 
-[//]: kontrolplane/contributors
+[//]: kontrolplane/generate-contributors-list
 
-[//]: kontrolplane/contributors
+[//]: kontrolplane/generate-contributors-list
 ```
 
 ## Example usage [basic - private repository]
@@ -82,7 +82,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: update-contributors
-        uses: kontrolplane/contributors@latest
+        uses: kontrolplane/generate-contributors-list@latest
         with:
           token: ${secrets.GITHUB_TOKEN}
           owner: kontrolplane
@@ -97,9 +97,9 @@ jobs:
 
 ## contributors
 
-[//]: kontrolplane/contributors
+[//]: kontrolplane/generate-contributors-list
 
-[//]: kontrolplane/contributors
+[//]: kontrolplane/generate-contributors-list
 ```
 
 ## Example output [code]
@@ -107,9 +107,9 @@ jobs:
 `README.md`
 
 ```markdown
-[//]: kontrolplane/contributors
+[//]: kontrolplane/generate-contributors-list
 
 <a href="https://github.com/levivannoort"><img src="https://avatars.githubusercontent.com/u/73097785?v=4" title="levivannoort" width="50" height="50"></a>
 
-[//]: kontrolplane/contributors
+[//]: kontrolplane/generate-contributors-list
 ```

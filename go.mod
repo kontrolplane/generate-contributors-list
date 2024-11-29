@@ -1,4 +1,4 @@
-module github.com/kontrolplane/contributors
+module github.com/kontrolplane/generate-contributors-list
 
 go 1.23.2
 

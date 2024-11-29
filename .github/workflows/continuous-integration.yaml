@@ -28,4 +28,4 @@ jobs:
         uses: actions/checkout@v4
       
       - name: contributors
-        uses: ./ # kontrolplane/contributors@latest
+        uses: ./ # kontrolplane/generate-contributors-list@latest

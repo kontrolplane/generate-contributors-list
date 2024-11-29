@@ -30,7 +30,7 @@ type Contributor struct {
 	Profile  string
 }
 
-const guard string = "[//]: kontrolplane/contributors"
+const guard string = "[//]: kontrolplane/generate-contributors-list"
 
 func main() {
 	cfg := Configuration{}
