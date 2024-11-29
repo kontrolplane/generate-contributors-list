@@ -1,5 +1,5 @@
 services:
-  contributors:
+  generate-contributors-list:
     build: 
       context: .
       dockerfile: Dockerfile
@@ -13,4 +13,3 @@ services:
       - INPUT_LOG_LEVEL=debug
     volumes:
       - ./assets/tests/README.md:/README.md
-    command: sh -c "./contributors && cat README.md"

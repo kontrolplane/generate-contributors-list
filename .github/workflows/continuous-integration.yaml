@@ -27,5 +27,5 @@ jobs:
       - name: checkout code
         uses: actions/checkout@v4
       
-      - name: contributors
+      - name: generate-contributors-list
         uses: ./ # kontrolplane/generate-contributors-list@latest
