@@ -21,6 +21,10 @@ on:
   schedule:
     - cron: '0 0 * * 0'
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   update-contributors:
     name: validate-pull-request-title
@@ -30,17 +34,29 @@ jobs:
         uses: actions/checkout@v4
 
       - name: update-contributors
-        uses: kontrolplane/generate-contributors-list@latest
+        uses: kontrolplane/generate-contributors-list@v1.0.0
         with:
           owner: kontrolplane
           repository: pull-request-title-validator
 
+      - name: check-for-changes
+        id: check
+        run: |
+          if git diff --quiet README.md; then
+            echo "No changes to commit"
+            echo "changes=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          echo "changes=true" >> $GITHUB_OUTPUT
+
       - name: open-pull-request
+        if: steps.check.outputs.changes == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
+          git checkout -b update-contributors
           git add README.md
           git commit -m "chore: update contributors section"
           git push -u origin update-contributors

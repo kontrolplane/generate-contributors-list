@@ -131,7 +131,7 @@ func updateContributors(cfg Configuration, contributors []Contributor, content s
 	contributorsHTML := generateContributors(cfg, contributors)
 
 	if r.MatchString(content) {
-		content = r.ReplaceAllString(content, fmt.Sprintf("%s\n\n%s\n\n%s", guard, contributorsHTML, guard))
+		content = r.ReplaceAllString(content, fmt.Sprintf("%s\n\n%s\n%s", guard, contributorsHTML, guard))
 	} else {
 		// todo: possible option to add it to the content regardless of guards
 		// content += fmt.Sprintf("\n\n%s\n%s\n%s", guard, contributorsHTML, guard)
